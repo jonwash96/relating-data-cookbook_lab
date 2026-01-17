@@ -1,10 +1,9 @@
-# I.T. Asset & License Management System
+# Cookbook Lab
 
-Allows I.T. Admins to track physical assets and software licenses.
+Data Modeling
 
 ## Technologies Used
 - [M]ongoose for MongoDB
 - [E]xpressJS
 - [N]odeJS
 - View Engine: EJS
-- CSS
