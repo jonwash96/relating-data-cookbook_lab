@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head', { title:recipe.name, stylesheets:['dashboard'] }) %>
+</head>
+<body>
+    <%- include('../partials/headbar.ejs') %>
+    <%- include('./partials/nav.ejs', {classList:'show', page:'Recipe'}) %>
+
+    <form action="/recipes/<%= recipe._id %>?_method=PUT" method="POST">      
+        <header>
+            <label for="title">Title</label>
+            <input id="title" name="title" type="text" required>
+
+            <div class="btn-block">
+                <button type="submit" class="action-btn">Save</button>
+                <button type="button" class="action-btn">Delete</button>
+            </div>
+        </header>
+            
+        <label for="prep-time">Prep Time</label>
+        <input id="prep-time" name="prepTime" type="number" value="<%= recipe.prepTime %>">
+        
+        <label for="cook-time">Cook Time</label>
+        <input id="cook-time" name="cookTime" type="number" value="<%= recipe.cookTime %>">
+        
+        <label for="servings">Servings</label>
+        <input id="servings" name="servings" type="number" value="<%= recipe.servings %>">
+
+        <label for="tags">Tags</label>
+        <h5>Tags help your recipe get found more easily</h5>
+        <p class="page-instruction">Use space-separated hashtags to write tags.</p>
+        <input id="tags" name="tags" type="number" placeholder="e.g. #cicillian #authenticitalian" list="recent-tags" value="<%= recipe.tags %>">
+
+        <label for="article">Description</label>
+        <textarea id="description" name="description">
+            <%= recipe.description %>
+        </textarea>
+
+        <datalist id="recent-tags">
+            <% tagOptions.forEach(i => { %>
+                <option><%= i %></option>
+            <% }) %>
+        </datalist>
+
+        <section id="ingredients">
+            <div class="section-head">
+                <h2>ingredients</h2>
+            </div>
+            <div class="list-wrapper">
+                <% ingredients.map((i, idx) => { %>
+                    <div class="ingredient">
+                        <input class="name" name="ingredient<%=idx%>$name" type="text" value="<%= i.name %>" list="recent-ingredients">
+                        <input class="quantity" name="ingredient<%=idx%>$quantity" type="text" value="<%= i.quantity %>">
+                    </div>
+                <% }) %>
+            </div>
+            <button class="add-field" data="ingredient"><svg></svg></button>
+            <datalist id="recent-ingredients">
+                <% ingredientOptions.forEach(i => { %>
+                    <option><%= i %></option>
+                <% }) %>
+            </datalist>
+        </section>
+
+        <section id="photos">
+            <div class="section-head">
+                <h2>Photos</h2>
+                <p class="page-instruction">Add a url for each photo you wish to be displayed with the recipe, and include a descriptive title as well.</p>
+            </div>
+            <div class="list-wrapper">
+                <% photos.map((p, idx) => { %>
+                    <div class="photo">
+                        <input class="title" name="photo<%=idx%>$title" type="text" value="<%= p.title %>">
+                        <input class="url" name="photo<%=idx%>$url" type="text" value="<%= p.url %>">
+                    </div>
+                <% }) %>
+            </div>
+            <button class="add-field" data="photo"><svg></svg></button>
+        </section>
+
+        <section id="instructions">
+            <div class="section-head">
+                <h2>Instructions</h2>
+            </div>
+            <div class="list-wrapper">
+                <% instructions.map((s, idx) => { %>
+                    <div class="step">
+                        <label for="step<%=idx%>$title">Step 1</label>
+                        <input id="step<%=idx%>$title" name="step<%=idx%>$itle" type="text" value="<%= s.title %>" required>
+                        <label for="step<%=idx%>$description">Description</label>
+                        <textarea id="step<%=idx%>$description" name="step<%=idx%>$description">
+                            <%= s.description %>
+                        </textarea>
+                    </div>
+                <% }) %>
+            </div>
+            <button class="add-field" data="step"><svg></svg></button>
+        </section>
+        
+        <section id="notes">
+            <div class="section-head">
+                <h2>Notes</h2>
+            </div>
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes">
+                <%= recipe.notes %>
+            </textarea>
+        </section>
+
+        <section>
+            <div class="section-head">
+                <h2>Article</h2>
+                <p class="page-instruction">If you would like to add an optional article to go into more depth and walk through your recipe, you can do so here.</p>
+            </div>
+            <label for="article">Article Body</label>
+            <textarea id="article" name="article">
+                <%= recipe.article %>
+            </textarea>
+        </section>
+    </form>
+
+    <% if (data?.modal) { let modalConfig; %>
+        <%- include('./_delete.ejs') %>
+
+        <% if (data?.modal==='delete') { %>
+            <script type="text/javascript">
+                modalConfig = {
+                    targetId:'delete-modal',
+                    showOnPageLoad:false,
+                    function1(e) {e.preventDefault();
+                        const recipeId = window.location.href.match(/(?<=pes\/).+(?=\/edit)/g);
+                        fetch("/recipes/"+recipeId, {method:'delete'})
+                            .then(res => { if (res.status=='204') {
+                                let count = 3;
+                                setInterval(() => {
+                                    this.message(`Recipe Successfully deleted. Redirecting in ${count} secconds. . .`);
+                                    count--;
+                                    if (count===0) {window.location.href = window.location.href.replace('/edit', '')};
+                                }, 1000)
+                            }
+                            });
+                    }
+                };
+            </script>
+            <% } %>
+            <script type="text/javascript" src="/js/modalController.js"></script>
+            <script type="text/javascript" >
+                document.querySelector('header btn-block button[type=button]')
+                    .addEventListener('click', (e) => modalController.show())
+            </script>
+    <% } %>
+</body>
+</html>

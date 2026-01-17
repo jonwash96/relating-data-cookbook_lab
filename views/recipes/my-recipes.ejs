@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head', { title:"My Recipes", stylesheets:['dashboard'] }) %>
+</head>
+<body>
+    <%- include('../partials/headbar.ejs') %>
+    <%- include('./partials/nav.ejs', {classList:'show', page:'Recipes'}) %>
+
+    <main>
+        <header>
+            <h1>Recipes</h1>
+            <p><%= recipes.length %></p>
+            <a href="/recipes/new"><button class="action-btn">Create</button></a>
+        </header>
+
+        <section id="recipes">
+            <div class="recipes-grid">
+                <% recipes.map((r,idx) => { %>
+                    <div class="recipe item card" name="<%= r.name %>" listNumber="<%= idx %>">
+                    <a href="/users/favorite/<%= r._id %>?_method=PUT" class="favorite"><svg></svg></a>
+                    <a href="/recipes/<%= r._id %>">
+                        <% if (r.photos) { %>
+                            <img src="<%= r.photos[0].url %>" alt="<%= r.photos[0].title || r.title %>">
+                        <% } %>
+                        <h4 class="title"><%= r.title %></h4>
+                        <% if (r.prepTime) { %>
+                            <p class="prep-time"><%= r.prepTime %></p>
+                        <% } %>
+                        <% if (r.description) { %>
+                            <p class="description"><%= r.description %></p>
+                        <% } %>
+                        
+                        <div class="action">
+                            Browse Recipes
+                            <svg></svg>
+                        </div>
+                    </a>
+                </div>
+                <% }) %>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

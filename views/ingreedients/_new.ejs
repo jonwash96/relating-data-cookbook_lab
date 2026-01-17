@@ -1,0 +1,27 @@
+<dialog id="ingredient-modal">
+    <form action="/ingredients" method="POST">
+        <header>
+            <h1>Add a New Ingredient</h1>
+            <div class="btn-block">
+                <button type="submit" class="action-btn">Add</button>
+            </div>
+        </header>
+
+        <p id="modal-message" class="hide"></p>
+        
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" required>
+
+        <label for="category">Category</label>
+        <input id="category" name="category" type="text" placeholder="e.g. Meat or dairy or vegetable">
+
+        <%= if (data?.forPantry) { %>
+            <label for="expires">Expiration Date</label>
+            <input id="expires" name="expires" type="date">
+        <% } %>
+        
+        <label for="img">Image</label>
+        <p class="form-instruction">Add an Image URL</p>
+        <input id="img" name="img" type="text">
+    </form>
+</dialog>

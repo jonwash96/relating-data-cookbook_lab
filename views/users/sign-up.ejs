@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs', { title: "Register" }) %>
+</head>
+<body>
+    <%- include('../partials/navbar.ejs') %>
+        <div class="singup-container">
+            <h1>Create a new FREE account</h1>
+            <form action="/auth/sign-up" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" />
+
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" />
+
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" name="confirmPassword" id="confirmPassword" />
+                
+                <button type="submit">Sign up</button>
+            </form>
+        </div>
+</body>
+</html>

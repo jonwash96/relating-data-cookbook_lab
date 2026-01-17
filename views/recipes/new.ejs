@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head', { title:recipe.name, stylesheets:['dashboard'] }) %>
+</head>
+<body>
+    <%- include('../partials/headbar.ejs') %>
+    <%- include('./partials/nav.ejs', {classList:'show', page:'Recipe'}) %>
+
+    <form action="/recipes" method="POST">      
+        <header>
+            <label for="title">Title</label>
+            <input id="title" name="title" type="text" required>
+
+            <button type="submit" class="action-btn">Save</button>
+        </header>
+            
+        <label for="prep-time">Prep Time</label>
+        <input id="prep-time" name="prepTime" type="number">
+        
+        <label for="cook-time">Cook Time</label>
+        <input id="cook-time" name="cookTime" type="number">
+        
+        <label for="servings">Servings</label>
+        <input id="servings" name="servings" type="number">
+
+        <label for="tags">Tags</label>
+        <h5>Tags help your recipe get found more easily</h5>
+        <p class="page-instruction">Use space-separated hashtags to write tags.</p>
+        <input id="tags" name="tags" type="number" placeholder="e.g. #cicillian #authenticitalian" list="recent-tags">
+
+        <label for="article">Description</label>
+        <textarea id="description" name="description">
+        </textarea>
+
+        <datalist id="recent-tags">
+            <% tagOptions.forEach(i => { %>
+                <option><%= i %></option>
+            <% }) %>
+        </datalist>
+
+        <section id="ingredients">
+            <div class="section-head">
+                <h2>ingredients</h2>
+            </div>
+            <div class="list-wrapper">
+                <div class="ingredient">
+                    <input class="name" name="ingredient1$name" type="text" placeholder="e.g. egg" list="recent-ingredients" required>
+                    <input class="quantity" name="ingredient1$quantity" type="text" placeholder="e.g. 1/4 Cup or 6" required>
+                </div>
+                <div class="ingredient disabled">
+                    <input class="name" name="ingredient2$name" type="text" placeholder="e.g. egg" list="recent-ingredients">
+                    <input class="quantity" name="ingredient2$quantity" type="text" placeholder="e.g. 1/4 Cup or 6">
+                    <button class="remove-field" data="ingredient"><svg></svg></button>
+                </div>
+            </div>
+            <button class="add-field" data="ingredient"><svg></svg></button>
+            <datalist id="recent-ingredients">
+                <% ingredientOptions.forEach(i => { %>
+                    <option><%= i %></option>
+                <% }) %>
+            </datalist>
+        </section>
+
+        <section id="photos">
+            <div class="section-head">
+                <h2>Photos</h2>
+                <p class="page-instruction">Add a url for each photo you wish to be displayed with the recipe, and include a descriptive title as well.</p>
+            </div>
+            <div class="list-wrapper">
+                <div class="photo">
+                    <input class="title" name="photo1$title" type="text" placeholder="e.g. Jambalaya top down">
+                    <input class="url" name="photo1$url" type="text" placeholder="e.g. https://www.photostore.com/photos/image.png">
+                </div>
+                <div class="photo disabled">
+                    <input class="title" name="photo2$title" type="text" placeholder="e.g. Jambalaya top down">
+                    <input class="url" name="photo2$title" type="text" placeholder="e.g. https://www.photostore.com/photos/image.png">
+                    <button class="remove-field" data="photo"><svg></svg></button>
+                </div>
+            </div>
+            <button class="add-field" data="photo"><svg></svg></button>
+        </section>
+
+        <section id="instructions">
+            <div class="section-head">
+                <h2>Instructions</h2>
+            </div>
+            <div class="list-wrapper">
+                <div class="step">
+                    <label for="step1Title">Step 1</label>
+                    <input id="step1Title" name="step1$title" type="text" placeholder="e.g. Stir The Dry Ingredients" required>
+                    <label for="step1Description">Description</label>
+                    <textarea id="step1Description" name="step1$description" placeholder="e.g. In a large bowl, mix together the salt, pepper, flower, and breadcrumbs">
+                    </textarea>
+                </div>
+                <div class="step disabled">
+                    <label for="step2Title">Step 2</label>
+                    <input id="step2Title" name="step2$title" type="text" placeholder="e.g. Stir The Dry Ingredients">
+                    <label for="step2Description">Description</label>
+                    <textarea id="step2Description" name="step2$description" placeholder="e.g. In a large bowl, mix together the salt, pepper, flower, and breadcrumbs">
+                    </textarea>
+                    <button class="remove-field" data="instruction"><svg></svg></button>
+                </div>
+            </div>
+            <button class="add-field" data="instruction"><svg></svg></button>
+        </section>
+        
+        <section id="notes">
+            <div class="section-head">
+                <h2>Notes</h2>
+            </div>
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes">
+            </textarea>
+        </section>
+
+        <section>
+            <div class="section-head">
+                <h2>Article</h2>
+                <p class="page-instruction">If you would like to add an optional article to go into more depth and walk through your recipe, you can do so here.</p>
+            </div>
+            <label for="article">Article Body</label>
+            <textarea id="article" name="article">
+            </textarea>
+        </section>
+    </form>
+</body>
+</html>

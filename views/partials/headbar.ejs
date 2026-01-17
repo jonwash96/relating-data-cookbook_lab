@@ -1,0 +1,40 @@
+<% let useMessage; try {useMessage = message} catch {useMessage = false} %>
+<div id="headbar">
+    <a href="/">Respie</a>
+
+    <form action="/search" method="POST" class="searchbar">
+        <svg></svg>
+        <input type="text" placeholder="Search">
+        <button type="submit"><svg></svg></button>
+    </form>
+    <% if (user) { %>
+        <div id="create-menu">
+            <button class="create-btn"><svg></svg></button>
+            <ul>
+                <a href="/recipes/new"><li>Resipie</li></a>
+                <a href="/users/pantry/new"><li>Add to Pantry</li></a>
+                <a href="/ingredients/new"><li>Ingredient</li></a>
+            </ul>
+        </div>
+
+        <div id="profile-menu">
+            <img src="<%= user.profilePhoto.small %>">
+            <span><%= user.displayname %></span>
+            <ul>
+                <a href="/users/<% user._id %>"></a><li>Profile</li>
+                <a href="/users/sign-out"></a><li>Sign Out</li>
+            </ul>
+        </div>
+    <% } else { %>
+        <div id="headbar-auth">
+            <a href="/auth/sign-up">Sign Up</a>
+            <a href="/auth/login">Login</a>
+        </div>
+    <% } %>
+</div>
+
+<% if (useMessage) { %>
+<div id="flash">
+    <p><%= message %></p>
+</div>
+<% } %>

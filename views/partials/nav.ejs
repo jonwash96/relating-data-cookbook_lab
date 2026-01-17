@@ -1,0 +1,34 @@
+<% let usePage; try {usePage = page} catch {usePage = page} %>
+<% let useClassList; try {useClassList = classList} catch {useClassList = classList} %>
+<nav class="<%= useClassList %>">
+    <a href="/user">
+        <div class="nav-item <%= usePage==='dashboard' && selected %>">
+            Dashboard
+        </div>
+    </a>
+    <a href="/user/recipes">
+        <div class="nav-item <%= usePage==='recipes' && selected %>">
+            My Recipes
+        </div>
+    </a>
+    <a href="/user/ingredients">
+        <div class="nav-item <%= usePage==='ingredients' && selected %>">
+            My Ingredients
+        </div>
+    </a>
+    <a href="/user/recipes/saved">
+        <div class="nav-item <%= usePage==='saved-recipes' && selected %>">
+            Saved Recipes
+        </div>
+    </a>
+    <a href="/user/lists/shopping">
+        <div class="nav-item <%= usePage==='lists' && selected %>">
+            Shopping List
+        </div>
+    </a>
+    <a href="/community/recipes">
+        <div class="nav-item <%= usePage==='community' && selected %>">
+            Browse Community Recipes
+        </div>
+    </a>
+</nav>

@@ -1,0 +1,20 @@
+body {
+    margin: 0 auto;
+    width: 900px;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #222;
+        color:white;
+    }
+    a {color:lightblue;}
+    a:visited {color:lightblue;}
+}
+
+.item-to-edit {
+    & span {display:none}
+}
+.item-to-edit:hover {
+    & span {display:inline}
+}
