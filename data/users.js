@@ -3,6 +3,7 @@ const users = [
     displayname: "John Doe",
     username: "johndoe",
     password: "password123",
+    hashWord: '$2b$10$gyrrmuUVIPVe3MgDHG4Ad.SXuU9byin0B8AmjznJydtYCirG4tq5y',
     pantry: [
       {
         name: "Flour",
@@ -30,6 +31,7 @@ const users = [
     displayname: "Jane Smith",
     username: "janesmith",
     password: "securepass",
+    hashWord: '$2b$10$gXbEXAEwTO9zeUIoiHVYOue8DCwfeBMlvF6YAXDdipOJggdT7QvaW',
     pantry: [
       {
         name: "Salt",
@@ -57,6 +59,7 @@ const users = [
     displayname: "Alice Johnson",
     username: "alicej",
     password: "mypassword",
+    hashWord: '$2b$10$9UJ.tWY.1IZRX0TV5ZjE0u/8oZNhvDDUUOrG9Vu99QM00AfrHDLQm',
     pantry: [
       {
         name: "Olive Oil",
@@ -111,6 +114,7 @@ const users = [
     displayname: "Charlie Green",
     username: "charlieg",
     password: "charliepass",
+    hashWord: '$2b$10$EHjL4CGPQraTnmlfl2bFOOJLC0.Rr9I0zAOYXWqRdOzJ5qAX/qQtG',
     pantry: [
       {
         name: "Milk",
@@ -138,6 +142,7 @@ const users = [
     displayname: "Diana White",
     username: "dianaw",
     password: "dianapass",
+    hashWord: '$2b$10$vgwlF.AYqNI/20nPr5cgyuZjgWNpp7hYWrjtqzySArXf9xEq0L/Ii',
     pantry: [
       {
         name: "Eggs",
@@ -165,6 +170,7 @@ const users = [
     displayname: "Eve Black",
     username: "eveb",
     password: "evepass",
+    hashWord: '$2b$10$EHjL4CGPQraTnmlfl2bFOOJLC0.Rr9I0zAOYXWqRdOzJ5qAX/qQtG',
     pantry: [
       {
         name: "Chicken",
@@ -192,6 +198,7 @@ const users = [
     displayname: "Frank Blue",
     username: "frankb",
     password: "frankpass",
+    hashWord: '$2b$10$PcoEwst.3Vv9nZ77PKxLtei2.igfThP7vkJDyjnXOqQCtWQ3SikAK',
     pantry: [
       {
         name: "Fish",
@@ -219,6 +226,7 @@ const users = [
     displayname: "Grace Yellow",
     username: "gracey",
     password: "gracepass",
+    hashWord: '$2b$10$W/ZNLFjHYkQ8buWWlEiszuiOrilrkjAn./RgCSbjOBjE95DCeQfQu',
     pantry: [
       {
         name: "Carrots",
@@ -246,6 +254,7 @@ const users = [
     displayname: "Hank Purple",
     username: "hankp",
     password: "hankpass",
+    hashWord: '$2b$10$ppkK86JnCAKDeJZD.Y7ku.BTVs9.2LoBneB9/sygpDGCOMA3UhPnm',
     pantry: [
       {
         name: "Tomatoes",

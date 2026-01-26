@@ -5,24 +5,24 @@
 </head>
 <body>
     <%- include('../partials/headbar.ejs') %>
-    <%- include('./partials/nav.ejs', {classList:'show', page:'Recipes'}) %>
+    <%- include('../partials/nav.ejs', {classList:'show', page:'Recipes'}) %>
 
     <main>
         <header>
             <h1><%= recipe.title %></h1>
             <div class="chips">
-                <% if (recepe.prepTime) { %>
-                    <div class="chip"><svg></svg>Prep Time: <%= recipe.prepTime %></div> 
+                <% if (recipe.prepTime) { %>
+                    <div class="chip"><!-- <svg></svg> -->Prep Time: <%= recipe.prepTime %></div> 
                 <% } %>
-                <% if (recepe.cookTime) { %>
-                    <div class="chip"><svg></svg>Cook Time: <%= recipe.cookTime %></div>
+                <% if (recipe.cookTime) { %>
+                    <div class="chip"><!-- <svg></svg> -->Cook Time: <%= recipe.cookTime %></div>
                 <% } %>
-                <% if (recepe.servings) { %>
-                    <div class="chip"><svg></svg>Servings: <%= recipe.servings %></div>
+                <% if (recipe.servings) { %>
+                    <div class="chip"><!-- <svg></svg> -->Servings: <%= recipe.servings %></div>
                 <% } %>
             </div>
             <div class="action-block">
-                <a href="/users/favorite/<%= r._id %>?_method=PUT" class="favorite"><svg></svg></a>
+                <a href="/users/favorite/<%= recipe._id %>?_method=PUT" class="favorite"><!-- <svg></svg> --></a>
                 <button id="action-btn">View Full Recipe</button>
             </div>
         </header>
@@ -34,15 +34,18 @@
             </div>
             <div class="ingredients-grid">
                 <% recipe.ingredients.map((i,idx) => { %>
-                    <% const inPantry = user.pantry.find(item => item._id===i._id) %>
+                    <% const inPantry = user.pantry.find(item => item.ingredientID?._id===i.ingredientID?._id) || false %>
                     <div class="ingredient card" name="<%= i.name %>" listNumber="<%= idx %>">
                         <input type="checkbox" <%= i.checked && "checked" %> />
-                        <p><%= inPantry?.quantity || '' %></p>
+                        <div class="quantity-block">
+                            <span><%= i.quantity || '' %></span>
+                            <span><%= inPantry?.quantity || '' %></span>
+                        </div>
                         <p><%= i.name %></p>
-                        <% if (i.img) { %>
-                            <img src="<%= i.img %>" alt="<%= i.name %>">
+                        <% if (i.ingreedientID?.img) { %>
+                            <img src="<%= i.ingreedientID.img %>" alt="<%= i.name %>">
                         <% } else { %>
-                            <img src="/no-img.svg">
+                            <img src="/svg/noimg.svg">
                         <% } %>
                     </div>
                 <% }) %>
@@ -63,7 +66,7 @@
                             <img src="<%= photo.url %>" alt="<%= photo.title || recipe.title %>">
                         <% }) %>
                     <% } else { %>
-                        <img src="/no-img.svg">
+                        <img src="/svg/noimg.svg">
                     <% } %>
                 </div>
             </div>
@@ -73,20 +76,16 @@
             <div class="section-head">
                 <h2>Instructions</h2>
                 <div class="view-full">
-                    <svg></svg>
+                    <!-- <svg></svg> -->
                 </div>
             </div>
             <div class="instructions-grid">
-                <% recipe.instructions.map((i,idx) => { %>
-                    <div class="instruction card" name="<%= i.title %>" listNumber="<%= idx %>">
-                        <input type="checkbox" <%= i.checked && "checked" %> />
-                        <p><%= i.order %></p>
-                        <p><%= i.title %></p>
-                        <% if (recipe.photos) { %>
-                            <img src="<%= i.img %>" alt="<%= i.title %>">
-                        <% } else { %>
-                            <img src="/no-img.svg">
-                        <% } %>
+                <% recipe.instructions.map((s,idx) => { %>
+                    <div class="instruction card" name="<%= s.title %>" listNumber="<%= idx %>">
+                        <input type="checkbox" <%= s.checked && "checked" %> />
+                        <p><%= s.order %></p>
+                        <p><%= s.title %></p>
+                        <img src="<%= s.imgUrl || `/numbers/${s.order}` %>" alt="<%= s.title %>">
                     </div>
                 <% }) %>
             </div>
@@ -96,7 +95,7 @@
             <div class="section-head">
                 <h2>Notes</h2>
                 <button class="view-full">
-                    <svg></svg>
+                    <!-- <svg></svg> -->
                 </button>
             </div>
             <div class="notes-grid">

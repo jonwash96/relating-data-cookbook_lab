@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../partials/head', { title:"My Recipes", stylesheets:['dashboard'] }) %>
+    <%- include('../partials/head', { title:"Recipes", stylesheets:['community'] }) %>
 </head>
 <body>
     <%- include('../partials/headbar.ejs') %>
@@ -9,16 +9,19 @@
 
     <main>
         <header>
-            <h1>Recipes</h1>
-            <p><%= recipes.length %></p>
-            <a href="/recipes/new"><button class="action-btn">Create</button></a>
+            <h1>All Recipes From The Community</h1>
+            <% if (user) { %>
+                <a href="/recipes/new"><button class="action-btn">Create</button></a>
+            <% } %>
         </header>
 
         <section id="recipes">
             <div class="recipes-grid">
                 <% recipes.map((r,idx) => { %>
                     <div class="recipe item card" name="<%= r.title %>" listNumber="<%= idx %>">
-                    <a href="/users/favorite/<%= r._id %>?_method=PUT" class="favorite"><!-- <svg></svg> --></a>
+                    <% if (user) { %>
+                        <a href="/users/favorite/<%= r._id %>?_method=PUT" class="favorite"><!-- <svg></svg> --></a>
+                    <% } %>
                     <a href="/recipes/<%= r._id %>">
                         <% if (r.photos) { %>
                             <img src="<%= r.photos[0].url %>" alt="<%= r.photos[0].title || r.title %>">

@@ -1,12 +1,17 @@
 //* MNT
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const morgan = require('morgan');
 const methodOverride = require('method-override');
 const searchController = require('./controllers/search.js');
 const authController = require('./controllers/auth.js');
-const ingredientsController = require('./controllers/ingredients');
-const recipes = require('./controllers/recipes.js');
+const ingredientsController = require('./controllers/ingredients.js');
+const recipesController = require('./controllers/recipes.js');
+const userController = require('./controllers/user.js');
+const MongoStore = require('connect-mongo');
+const passDataToView = require('./middleware/pass-data-to-view.js');
+
 
 //* VAR
 const PORT = 3001;
@@ -31,13 +36,20 @@ app.use(passDataToView);
 
 //* ROUTE
 app.use('/auth', authController);
-
+app.get('/users', async (req,res) => res.redirect('/'))
+app.get('/user', async (req,res) => res.redirect('/'))
+app.get('/users//dashboard', async (req,res) => res.redirect('/'))
 app.get('/', (req, res) => {
     res.render('home.ejs');
 });
 
+app.get('/dashboard', (req,res) => {
+    res.redirect(`/user/${req.session.user._id}/dashboard`);
+})
+
 app.use('/ingredients', ingredientsController);
 app.use('/recipes', recipesController);
+app.use('/user', userController);
 // app.use('/search', searchController);
 
 app.get('/*splat', (req, res) => {

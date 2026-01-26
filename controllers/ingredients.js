@@ -1,7 +1,8 @@
 //* MNT
 const express = require('express');
 const router = express.Router();
-const { Ingredient } = require('../models/Ingredient.js');
+const Ingredient = require('../models/Ingredient.js');
+const User = require('../models/User.js');
 
 //* VAR
 
@@ -9,14 +10,19 @@ const { Ingredient } = require('../models/Ingredient.js');
 // STATIC
 // Index - GET 
 router.get('/', async (req, res) => {
-    const indreedients = await Ingredient.find({});
-    res.render('ingredients/show.ejs', { indreedients });
+    const ingredients = await Ingredient.find();
+    const user = await User.findById(req.session.user._id)
+            .populate('favorites.ingredients pantry');
+    res.locals.data = {location:'ingredients'};
+
+    res.render('ingredients/show.ejs', { ingredients, pantry:user.pantry });
 })
 
 // New - GET 
-router.get('/new', (req, res) => {
-    req.session.data = {modal:'new'};
-    res.redirect('/ingredients');
+router.get('/new', async (req, res) => {
+    res.locals.data = {modal:'new'};
+    const ingredients = await Ingredient.find();
+    res.render('ingredients/show.ejs', { ingredients });
 });
 
 // Create - POST
@@ -49,7 +55,7 @@ router.delete('/:ingredientId', async (req, res) => {
 router.put('/:ingredientId', async (req, res) => {
     try {
         await Ingredient.findByIdAndUpdate(req.params.ingredientId, req.body);
-        req.session.data = {modal:'show'};
+        res.locals.data = {location:'ingredients', modal:'show'};
         res.redirect(`/ingredients/${req.params.ingredientId}`);
     } catch (error) {
         console.error(error);
@@ -60,14 +66,20 @@ router.put('/:ingredientId', async (req, res) => {
 
 // Edit - GET 
 router.get('/:ingredientId/edit', async (req, res) => {
-    const ingredient = await Ingredient.findById(req.params.ingredientId);
-    res.render(`ingredients/${req.params.ingredientId}s/edit.ejs`, { ingredient });
+    const item = await Ingredient.findById(req.params.ingredientId);
+    const ingredients = await Ingredient.find();
+    res.locals.data = {location:'ingredients', modal:'edit'};
+
+    res.render(`ingredients/show.ejs`, { ingredients, item });
 })
 
 // Show - GET 
 router.get('/:ingredientId', async (req, res) => {
-    const ingredient = await Ingredient.findById(req.params.ingredientId);
-    res.render('ingredients/_show-one.ejs', { ingredient });
+    const item = await Ingredient.findById(req.params.ingredientId);
+    const ingredients = await Ingredient.find();
+    res.locals.data = {location:'ingredients', modal:'show'};
+
+    res.render('ingredients/show.ejs', { ingredients, item });
 })
 
 

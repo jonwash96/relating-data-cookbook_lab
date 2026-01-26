@@ -1,0 +1,34 @@
+<dialog id="pantry-edit-modal">
+    <form action="/user/pantry/<%= item._id %>?_method=PUT" method="POST">
+        <header>
+            <div class="title-block">
+                <h1>Edit <%= item.name %></h1>
+                <p id="modal-message" class="hide"></p>
+            </div>
+            <div class="btn-block">
+                <button type="submit" class="action-btn">Save</button>
+                <button type="button" class="btn">Delete</button>
+            </div>
+        </header>
+
+        <section>
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" value="<%= item.name %>" required>
+    
+            <label for="quantity">Quantity</label>
+            <input id="quantity" name="quantity" type="text" value="<%= item.quantity %>">
+    
+            <label for="expires">Expiration Date</label>
+            <% let useDate; try {useDate = new Date(item.expires).toISOString().split('T')[0]} catch {useDate = ''} %>
+            <input id="expires" name="expires" type="date" value="<%= useDate %>">
+            
+            <label for="img">Image URL</label>
+            <input id="img" name="img" type="text" value="<%= item.image %>">
+            
+            <label for="notes">notes</label>
+            <textarea id="notes" name="notes">
+                <%= item.notes %>
+            </textarea>
+        </section>
+    </form>
+</dialog>

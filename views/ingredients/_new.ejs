@@ -1,0 +1,24 @@
+<dialog id="ingredient-edit-modal">
+    <form action="/ingredients" method="POST">
+        <header>
+            <div class="title-block">
+                    <h1>Add a New Ingredient</h1>
+                <p id="modal-message" class="hide"></p>
+            </div>
+            <div class="btn-block">
+                <button type="submit" class="action-btn">Add</button>
+            </div>
+        </header>
+        
+        <section>
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" required>
+    
+            <label for="category">Category</label>
+            <input id="category" name="category" type="text" placeholder="e.g. Meat or dairy or vegetable">
+    
+            <label for="img">Image URL</label>
+            <input id="img" name="img" type="text">
+        </section>
+    </form>
+</dialog>

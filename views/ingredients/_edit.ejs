@@ -1,7 +1,7 @@
-<dialog id="ingredient-modal">
-    <form action="/ingredients/<%= ingredient._id %>?_method=PUT" method="POST">
+<dialog id="ingredient-edit-modal">
+    <form action="/ingredients/<%= item._id %>?_method=PUT" method="POST">
         <header>
-            <h1>Edit <%= ingredient.name %></h1>
+            <h1>Edit <%= item.name %></h1>
             <div class="btn-block">
                 <button type="submit" class="action-btn">Save</button>
                 <button type="button" class="btn">Delete</button>
@@ -11,19 +11,19 @@
         <p id="modal-message" class="hide"></p>
         
         <label for="name">Name</label>
-        <input id="name" name="name" type="text" value="<%= ingredient.name %>" required>
+        <input id="name" name="name" type="text" value="<%= item.name %>" required>
 
         <label for="category">Category</label>
-        <input id="category" name="category" type="text" value="<%= ingredient.category %>">
+        <input id="category" name="category" type="text" value="<%= item.category %>">
 
-        <%= if (forPantry) { %>
+        <% if (data?.forPantry) { %>
             <label for="expires">Expiration Date</label>
-            <% const useDate = new Date(ingredient.expires).toISOString().split('T')[0] || '' %>
+            <% const useDate = new Date(item.expires).toISOString().split('T')[0] || '' %>
             <input id="expires" name="expires" type="date" value="<%= useDate %>">
         <% } %>
         
         <label for="img">Image</label>
         <p class="form-instruction">Add an Image URL</p>
-        <input id="img" name="img" type="text" value="<%= ingredient.image %>">
+        <input id="img" name="img" type="text" value="<%= item.image %>">
     </form>
 </dialog>

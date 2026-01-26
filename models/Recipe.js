@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 const Ingredient = require('./Ingredient.js');
+const User = require('./User.js');
 
 const stepSchema = new mongoose.Schema({
     order:Number,
     title:String,
+    description:String,
+    imgUrl:String
 });
 
 const photoSchema = new mongoose.Schema({
@@ -20,6 +23,15 @@ const ingredientEntrySchema = new mongoose.Schema({
     ingredientID:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Ingredient'
+    }
+})
+
+const favoritedBySchema = new mongoose.Schema({
+    username:String,
+    displayname:String,
+    userID:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
     }
 })
 
@@ -51,7 +63,7 @@ const recipeTemplate = {
     photos:[photoSchema],
     notes:String,
     article:String,
-    favoritedBy:[mongoose.Schema.Types.ObjectId]
+    favoritedBy:[favoritedBySchema]
 };
 
 const recipeSchema = new mongoose.Schema(recipeTemplate);
@@ -59,13 +71,12 @@ const recipeSchema = new mongoose.Schema(recipeTemplate);
 recipeSchema.pre('save', function() {
     this.resourceType = 'Recipe';
     this.created = Date();
-    this.owner = req.session.user._id;
     
 });
 
-// ingredientSchema.pre('save', async function() {
-//     this.ref = await Ingredient.find({name:this.name})._id || null;
-// })
+ingredientEntrySchema.pre('save', async function() {
+    this.ingredientID = await Ingredient.find({name:this.name}) || null;
+})
 
 const Recipe = mongoose.model('Recipe', recipeSchema);
 const Step = mongoose.model('Step', stepSchema);

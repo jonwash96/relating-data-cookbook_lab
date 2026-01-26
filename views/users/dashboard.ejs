@@ -5,19 +5,24 @@
 </head>
 <body>
     <%- include('../partials/headbar.ejs') %>
-    <%- include('./partials/nav.ejs', {classList:'show', page:'Dashboard'}) %>
+    <%- include('../partials/nav.ejs', {classList:'show', page:'Dashboard'}) %>
 
-    <main>
+    <main class="dashboard">
         <header>
-            <h1>Hello, <%= user.displayname %></h1>
-            <p>Explore Your Recipes, Favourite Ingreediets, and More.</p>
+            <div class="left">
+                <h1><span class="thin">Hello,</span> <%= user.displayname %></h1>
+                <p>Explore Your Recipes, Favourite Ingredients, and More.</p>
+            </div>
+            <form class="btn-block" action="/recipes/new" method="GET">
+                <button class="action-btn">➕ New Recipe</button>
+            </form>
         </header>
 
         <section id="ingredients">
             <div class="section-head">
                 <h2>My ingredients</h2>
                 <button class="view-full">
-                    <div><%= user.ingredients.length %></div>
+                    <div><%= user.favorites.ingredients.length %></div>
                 </button>
                 <div>
                     <div id="view-favoriteIngredients">Favourites</div>
@@ -26,7 +31,7 @@
             </div>
             <section class="slider">
                 <div class="ingredients-grid">
-                    <% user.ingredients.favorites.map((i,idx) => { %>
+                    <% user.favorites.ingredients.map((i,idx) => { %>
                         <% const inPantry = user.pantry.find(item => item._id===i._id) %>
                         <div class="ingredient card" name="<%= i.name %>" listNumber="<%= idx %>">
                             <p><%= inPantry?.quantity || '' %></p>
@@ -34,20 +39,20 @@
                             <% if (i.img) { %>
                                 <img src="<%= i.img %>" alt="<%= i.name %>">
                             <% } else { %>
-                                <img src="/no-img.svg">
+                                <img src="/svg/noimg.svg">
                             <% } %>
                         </div>
                     <% }) %>
                 </div>
                 <div class="ingredients-grid">
-                    <% user.ingredients.custom.map((i,idx) => { %>
+                    <% user.favorites.ingredients.map((i,idx) => { %>
                         <div class="ingredient card" name="<%= i.name %>" listNumber="<%= idx %>">
                             <p><%= i.quantity || '' %></p>
                             <p><%= i.name %></p>
                             <% if (i.img) { %>
                                 <img src="<%= i.img %>" alt="<%= i.name %>">
                             <% } else { %>
-                                <img src="/no-img.svg">
+                                <img src="/svg/noimg.svg">
                             <% } %>
                         </div>
                     <% }) %>
@@ -55,34 +60,39 @@
             </section>
         </section>
 
-        <section id="dashboard-pantry">
+        <section id="pantry">
             <div class="section-head">
                 <h2>My Pantry</h2>
             </div>
-            <% user.pantry.map((i,idx) => { %>
-                <div class="item card" name="<%= i.name %>" listNumber="<%= idx %>">
-                    <a href="/users/pantry/<%= i._id %>/modal">
-                        <% if (i.img) { %>
-                            <img src="<%= i.img %>" alt="<%= i.name %>">
-                        <% } else { %>
-                            <img src="/no-img.svg">
-                        <% } %>
-                        <p><%= i.name %></p>
-                        <p><%= i.category %></p>
-                        <p><%= i.quantity %> left</p>
-                        <% const expirationDDay = i.expires - Date.now(); const weekInMs = 604800000; const xpddDays = Math.floor(expirationDDay * 60 * 60 * 24); %>
-                        <% if (expirationDDay < weekInMs) { %>
-                            <div class="chip small"><svg></svg> in <%= xpddDays %> days</div>
-                        <% } %>
-                    </a>
-                    <a href="/search/?ingredients=<%= i.name %>">
-                        <div class="action">
-                            Browse Recipes
-                            <svg></svg>
-                        </div>
-                    </a>
-                </div>
-            <% }) %>
+            <div class="pantry-scroller">
+                <% user.pantry.map((i,idx) => { %>
+                    <div class="item card" name="<%= i.name %>" listNumber="<%= idx %>">
+                        <a href="/user/pantry/dashboard/<%= i._id %>">
+                            <div class="top">
+                                <% if (i.img) { %>
+                                    <img src="<%= i.img %>" alt="<%= i.name %>">
+                                <% } else { %>
+                                    <img src="/svg/noimg.svg">
+                                <% } %>
+                                <p class="name"><%= i.name %></p>
+                                <p class="category"><%= i.ingredientID?.category %></p>
+                                <p class="quantity"><%= i.quantity %> left</p>
+                                <% const expirationDDay = i.expires - Date.now(); const weekInMs = 604800000; const xpddDays = Math.floor(expirationDDay / 1000 / 60 / 60 / 24); %>
+                                <% if (expirationDDay < weekInMs) { %>
+                                    <div class="chip small"><!-- <svg></svg> --> in <%= xpddDays %> days</div>
+                                <% } %>
+                            </div>
+                        </a>
+                        <hr>
+                        <a href="/search/?ingredients=<%= i.name %>" class="bottom">
+                            <div class="action">
+                                Browse Recipes
+                                <!-- <svg></svg> -->
+                            </div>
+                        </a>
+                    </div>
+                <% }) %>
+            </div>
         </section>
 
         <section id="suggested-recipes">
@@ -91,23 +101,27 @@
                 <p>Based on your activity</p>
                 <button>See More</button>
             </div>
-            <div class="suggested-recipes-grid">
-                <% user.suggested.map((i,idx) => { %>
-                    <div class="recipe card small" name="<%= i.title %>" listNumber="<%= idx %>">
-                        <img src="<%= i.img %>" alt="<%= i.title %>">
-                        <p><%= i.title %></p>
-                        <p><%= i.order %></p>
-                        <div class="chips">
-                            <div class="chip"><svg></svg>Prep: <%= recipe.prepTime %></div>
-                            <div class="chip"><svg></svg>Cook: <%= recipe.cookTime %></div>
-                            <div class="chip"><svg></svg>Serves: <%= recipe.servings %></div>
+            <% if (user.suggested) { %>
+                <div class="suggested-recipes-grid">
+                    <% user.suggested.map((i,idx) => { %>
+                        <div class="recipe card small" name="<%= i.title %>" listNumber="<%= idx %>">
+                            <img src="<%= i.img %>" alt="<%= i.title %>">
+                            <p><%= i.title %></p>
+                            <p><%= i.order %></p>
+                            <div class="chips">
+                                <div class="chip"><!-- <svg></svg> -->Prep: <%= recipe.prepTime %></div>
+                                <div class="chip"><!-- <svg></svg> -->Cook: <%= recipe.cookTime %></div>
+                                <div class="chip"><!-- <svg></svg> -->Serves: <%= recipe.servings %></div>
+                            </div>
                         </div>
+                    <% }) %>
+                    <div class="next">
+                        <!-- <svg></svg> -->
                     </div>
-                <% }) %>
-                <div class="next">
-                    <svg></svg>
                 </div>
-            </div>
+            <% } else { %>
+                <h4>No suggested Recipes</h4>
+            <% } %>
         </section>
         
         <section id="user-recipes">
@@ -116,25 +130,59 @@
                 <button>View All</button>
             </div>
             <div class="user-recipes-grid">
-                <% const allRecipes = [] %>
-                <% allRecipes.push(user.recipes.userCreated); allRecipes.push(user.recipes.favorites) %>
-                <% allRecipes.map((r,idx) => { %>
-                    <div class="recipe card small" name="<%= r.title %>" listNumber="<%= idx %>">
-                        <img src="<%= r.img %>" alt="<%= r.title %>">
-                        <p><%= r.title %></p>
-                        <p><%= r.order %></p>
-                        <div class="chips">
-                            <div class="chip"><svg></svg>Prep: <%= recipe.prepTime %></div>
-                            <div class="chip"><svg></svg>Cook: <%= recipe.cookTime %></div>
-                            <div class="chip"><svg></svg>Serves: <%= recipe.servings %></div>
+                <% if (user.recipes.length > 0) { %>
+                    <% user.recipes.push(user.recipes.userCreated); user.recipes.push(user.recipes.saved) %>
+                    <% user.recipes.map((r,idx) => { %>
+                        <div class="recipe card small" name="<%= r.title %>" listNumber="<%= idx %>">
+                            <img src="<%= r.img %>" alt="<%= r.title %>">
+                            <p><%= r.title %></p>
+                            <p><%= r.order %></p>
+                            <div class="chips">
+                                <div class="chip"><!-- <svg></svg> -->Prep: <%= recipe.prepTime %></div>
+                                <div class="chip"><!-- <svg></svg> -->Cook: <%= recipe.cookTime %></div>
+                                <div class="chip"><!-- <svg></svg> -->Serves: <%= recipe.servings %></div>
+                            </div>
                         </div>
+                    <% }) %>
+                    <div class="next">
+                        <!-- <svg></svg> -->
                     </div>
-                <% }) %>
-                <div class="next">
-                    <svg></svg>
-                </div>
+                <% } else { %>
+                    <h4>No Recipes to Show</h4>
+                <% } %>
             </div>
         </section>
     </main>
+
+    <% if (data?.modal) { let modalConfig; %>
+        <% if (data?.modal==='show') { %>
+            <%- include('./_show-pantry-item.ejs') %>
+            <script type="text/javascript">
+                modalConfig = {
+                    showOnPageLoad: true,
+                    targetId:'pantry-show-modal',
+                    function1() {window.location.href = window.locaation.origin+'/user/pantry/'+item?._id+'/edit'},
+                    function2() {this.deleteIngredient()}
+                };
+                
+            </script>
+            <% } %>
+        <% if (data?.modal==='new') { %>
+            <script type="text/javascript">
+                modalConfig = {targetId:'ingredient-modal'};
+            </script>
+            <% } %>
+        <% if (data?.modal==='edit') { %>
+            <%- include('./_edit-pantry-item.ejs') %>
+            <script type="text/javascript">
+                modalConfig = {
+                    showOnPageLoad: true,
+                    targetId:'pantry-edit-modal',
+                    function2() {this.deleteIngredient()}
+                };
+            </script>
+            <% } %>
+            <script type="text/javascript" src="/js/modalController.js"></script>
+    <% } %>
 </body>
 </html>

@@ -1,5 +1,5 @@
 const modalController = {
-    target: document.getElementById(modalConfig?.targetId || null),
+    target: document.getElementById(modalConfig.targetId),
     actionBtn: document.querySelector('dialog btn-block button[type=submit]'),
     btn2: document.querySelector('dialog btn-block button[type=button]') || null,
     message(message) {
@@ -20,8 +20,13 @@ const modalController = {
         e.preventDefault();
         this.count++;
         if (this.count>=2) {
-            const ingredientId = window.location.href.match(/(?<=ents\/).+(?=\/edit)/g);
-            fetch(`/ingredients/${ingredientId}`, {method:'DELETE'})
+            let ingredientId;
+            if (window.location.href.includes("ingredients/")) {
+                ingredientId = window.location.href.match(/(?<=ents\/).+(?=\/edit)/g)
+            } else if (window.location.href.includes("dashboard/")) {
+                ingredientId = window.location.href.match(/(?<=pantry\/).+/g)
+            };
+            fetch(`/users/pantry/${ingredientId}`, {method:'DELETE'})
                 .then(res => { if (res.status=='204') {
                     let count = 3;
                     modalController.actionBtn.classList = 'disabled';
@@ -29,7 +34,13 @@ const modalController = {
                     setInterval(() => {
                         modalController.message(`Item successfully Deleted. Redirecting in ${count} seconds. . .`);
                         count--;
-                        if (count===0) {window.location.href = window.location.origin+'/ingredients'}
+                        if (count===0) {
+                            if (window.location.href.includes("ingredients/")) {
+                                window.location.href = window.location.origin+'/ingredients'
+                            } else if (window.location.href.includes("dashboard/")) {
+                                window.location.href = window.location.origin+'/user/dashboard'
+                            };
+                        }
                     }, 1000)
                     } else {
                         modalController.message("An internal server error has occured. Please try again later. Press 'esc' to exit.");
@@ -43,13 +54,14 @@ const modalController = {
     }
 };
 
-modalConfig.showOnPageLoad !== false && modalController.show();
-modalConfig.function1 && (modalController.function1 = modalConfig.function1)
-modalConfig.function1 && (modalController.function2 = modalConfig.function2)
-
 modalController.function1.bind(modalController);
 modalController.function2.bind(modalController);
 modalController.deleteIngredient.bind(modalController);
 
-module.exports = modalController;
+modalConfig.showOnPageLoad !== false && modalController.show();
+modalConfig.function1 && (modalController.function1 = modalConfig.function1)
+modalConfig.function1 && (modalController.function2 = modalConfig.function2)
+
+
+// module.exports = modalController;
 

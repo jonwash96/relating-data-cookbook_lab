@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
-    <%- include('../partials/headbar.ejs') %>
+    <%- include('./partials/headbar.ejs') %>
 
     <h1>Your Home For Cooking Made Simple</h1>
     <p>Browse Thousands of Recipes and Share Them With The World</p>
@@ -13,13 +13,13 @@
 
     <section id="top-recipes">
         <div class="ingredients-grid">
-            <% data.topRecipes.map((r,idx) => { %>
+            <% data?.topRecipes?.map((r,idx) => { %>
                 <div class="recipe-card" name="<%= r.name %>" listNumber="<%= idx %>">
                     <h4><%= r.title %></h4>
                     <div>
-                        <div class="chip"><svg></svg>Prep Time: <%= r.prepTime %></div>
-                        <div class="chip"><svg></svg>Cook Time: <%= r.cookTime %></div>
-                        <div class="chip"><svg></svg>Servings: <%= r.servings %></div>
+                        <div class="chip"><!-- <svg></svg> -->Prep Time: <%= r.prepTime %></div>
+                        <div class="chip"><!-- <svg></svg> -->Cook Time: <%= r.cookTime %></div>
+                        <div class="chip"><!-- <svg></svg> -->Servings: <%= r.servings %></div>
                     </div>
                     <a href="/recipes/<%= r._id %>">See More</a>
                     <img src="<%= r.img %>" alt="<%= r.title %>">
@@ -28,7 +28,7 @@
         </div>
     </section>
 
-    <section id="sign-up">
+    <section id="register">
         <h2>Introducing Your New Su-Chef</h2>
         <p>The Resspie Dashboard makes cooking a breeze!<br>Sign up to save all your recipes, favourite ingredients, and cheff's notes all in 1 place.</p>
         <button class="action-btn">Let's Get Cookin!</button>
@@ -38,7 +38,7 @@
     <section id="health-promo">
         <h2>A Healthier You<br>Is A Happier Life</h2>
         <p>Sign up to engague with our community on topics to promote a healthy lifestyle.<br>Plus browse hundreds of articles written by top community members on how you can keep yourself in top condition.</p>
-        <button class="action-btn">Sign-up</button>
+        <button class="action-btn">Sign up</button>
         <button class="info-btn">See More</button>
         <img src="/forum-promo.png" alt="Resspie Community Forum Image">
     </section>
@@ -46,7 +46,7 @@
     <section id="workout-app-promo">
         <h2>Coming Soon!</h2>
         <p>Be one of the first to try out the Respie workout tracker app.</p>
-        <button class="action-btn">Sign-up For The Newsletter</button>
+        <button class="action-btn">Sign up For The Newsletter</button>
         <button class="info-btn">Join The Beta</button>
         <button class="info-btn">Learn More</button>
         <img src="/forum-promo.png" alt="Resspie Community Forum Image">

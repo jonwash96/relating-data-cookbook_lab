@@ -1,0 +1,70 @@
+<% const inPantry = () => forPantry ? item : user.pantry.find(item => item._id===item._id) %>
+<% let useRecipesThatUse; try {useRecipesThatUse = recipesThatUse} catch {recipesThatUse = false}  %>
+<dialog id="pantry-show-modal">
+    <form action="/dashboard" method="GET" class="close-btn">
+        <button>❌</button>
+    </form>
+    <header>
+        <div class="title-block">
+            <h1><%= item.name %></h1>
+            <p><%= item.ingredientID?.category %></p>
+            <h4 class="quantity"><%= item.quantity || "#" %> left</h4>
+            <% const expirationDDay = item.expires - Date.now(); const weekInMs = 604800000; const xpddDays = Math.floor(expirationDDay * 60 * 60 * 24); %>
+            <% if (expirationDDay < weekInMs) { %>
+                <div class="chip small"><!-- <svg></svg> --> in <%= xpddDays %> days</div>
+
+            <% } %>
+            <p id="modal-message" class="hide"><%= message && message %></p>
+        </div>
+        <div class="btn-block">
+            <a href="/user/pantry/<%= item._id %>/edit">
+                <button type="submit">Edit</button>
+            </a> 
+            <a href="/user/pantry/<%= item._id %>?_method=DELETE">
+                <button type="button">Delete</button>
+            </a>
+        </div>
+    </header>
+
+    <div class="left">
+        <% if (item.img) { %>
+            <img src="<%= item.img %>" alt="<%= item.name %>">
+        <% } else { %>
+            <img src="/svg/noimg.svg">
+        <% } %>
+    </div>
+    
+    <section id="in-user-recipes" class="right">
+        <div class="section-head">
+            <h2>In Your Recipes</h2>
+        </div>
+        <div class="recipes-grid">
+            <% if (recipesThatUse) { %>
+                <% recipesThatUse?.map((r,idx) => { %>
+                    <div class="recipe item card" name="<%= r.name %>" listNumber="<%= idx %>">
+                        <a href="/users/favorite/<%= r._id %>?_method=PUT" class="favorite"><!-- <svg></svg> --></a>
+                        <a href="/recipes/<%= r._id %>">
+                            <% if (r.photos) { %>
+                                <img src="<%= r.photos[0].url %>" alt="<%= r.photos[0].title || r.title %>">
+                            <% } %>
+                            <h4 class="title"><%= r.title %></h4>
+                            <% if (r.prepTime) { %>
+                                <p class="prep-time"><%= r.prepTime %></p>
+                            <% } %>
+                            <% if (r.description) { %>
+                                <p class="description"><%= r.description %></p>
+                            <% } %>
+                            
+                            <div class="action">
+                                Browse Recipes
+                                <!-- <svg></svg> -->
+                            </div>
+                        </a>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <span><em>No recipes that use this ingredient</em></span>
+            <% } %>
+        </div>
+    </section>
+</dialog>

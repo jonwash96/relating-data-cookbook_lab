@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ingredientTemplate = {
+const ingredientSchema = new mongoose.Schema({
     resourceType:{
         type:String,
     },
@@ -10,9 +10,7 @@ const ingredientTemplate = {
     },
     category:String,
     img:String,
-};
-
-const ingredientSchema = new mongoose.Schema(ingredientTemplate);
+});
 
 ingredientSchema.pre('save', function() {
     this.resourceType = 'Ingredient';
@@ -20,4 +18,4 @@ ingredientSchema.pre('save', function() {
 
 const Ingredient = mongoose.model('Ingredient', ingredientSchema);
 
-module.exports = { Ingredient, ingredientTemplate };
+module.exports = Ingredient;

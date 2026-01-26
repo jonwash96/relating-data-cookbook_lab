@@ -8,7 +8,7 @@ const passDataToView = (req,res,next) => {
     res.locals.message = req.session.message ? req.session.message : null;
         req.session.message && (req.session.message = null);
 
-    res.locals.data = req.session.data ? req.session.data : null;
+    res.locals.data = req.session.data ? String(req.session.data) : null;
         req.session.data && (req.session.data = null);
 
     next();

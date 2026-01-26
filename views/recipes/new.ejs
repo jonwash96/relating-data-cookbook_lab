@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../partials/head', { title:recipe.name, stylesheets:['dashboard'] }) %>
+    <%- include('../partials/head', { title:"New Recipe", stylesheets:['dashboard'] }) %>
 </head>
 <body>
     <%- include('../partials/headbar.ejs') %>
-    <%- include('./partials/nav.ejs', {classList:'show', page:'Recipe'}) %>
+    <%- include('../partials/nav.ejs', {classList:'show', page:'Recipe'}) %>
 
-    <form action="/recipes" method="POST">      
+    <form action="/recipes" method="POST" class="main">      
+        <br>
         <header>
-            <label for="title">Title</label>
-            <input id="title" name="title" type="text" required>
+            <div>
+                <label for="title">Title</label>
+                <input id="title" name="title" type="text" required>
+            </div>
 
-            <button type="submit" class="action-btn">Save</button>
+            <div class="btn-block">
+                <button type="submit" class="action-btn">Save</button>
+            </div>
         </header>
             
         <label for="prep-time">Prep Time</label>
@@ -25,36 +30,38 @@
         <input id="servings" name="servings" type="number">
 
         <label for="tags">Tags</label>
-        <h5>Tags help your recipe get found more easily</h5>
+        <h5 class="page-info">Tags help your recipe get found more easily</h5>
         <p class="page-instruction">Use space-separated hashtags to write tags.</p>
-        <input id="tags" name="tags" type="number" placeholder="e.g. #cicillian #authenticitalian" list="recent-tags">
+        <input id="tags" name="tags" type="text" placeholder="e.g. #cicillian #authenticitalian" list="recent-tags">
 
         <label for="article">Description</label>
         <textarea id="description" name="description">
         </textarea>
 
         <datalist id="recent-tags">
-            <% tagOptions.forEach(i => { %>
-                <option><%= i %></option>
-            <% }) %>
+            <% if (tagOptions.length > 0)  { %>
+                <% tagOptions.forEach(i => { %>
+                    <option><%= i %></option>
+                <% }) %>
+            <% } %>
         </datalist>
 
         <section id="ingredients">
             <div class="section-head">
-                <h2>ingredients</h2>
+                <h2>Ingredients</h2>
             </div>
             <div class="list-wrapper">
                 <div class="ingredient">
-                    <input class="name" name="ingredient1$name" type="text" placeholder="e.g. egg" list="recent-ingredients" required>
-                    <input class="quantity" name="ingredient1$quantity" type="text" placeholder="e.g. 1/4 Cup or 6" required>
+                    <input class="name" name="ingredient1" type="text" placeholder="e.g. egg" list="recent-ingredients" required>
+                    <input class="quantity" name="ingredient1" type="text" placeholder="e.g. 1/4 Cup or 6" required>
                 </div>
                 <div class="ingredient disabled">
-                    <input class="name" name="ingredient2$name" type="text" placeholder="e.g. egg" list="recent-ingredients">
-                    <input class="quantity" name="ingredient2$quantity" type="text" placeholder="e.g. 1/4 Cup or 6">
-                    <button class="remove-field" data="ingredient"><svg></svg></button>
+                    <input class="name" name="ingredient2" type="text" placeholder="e.g. egg" list="recent-ingredients">
+                    <input class="quantity" name="ingredient2" type="text" placeholder="e.g. 1/4 Cup or 6">
+                    <button class="remove-field" data="ingredient"><!-- <svg></svg> --></button>
                 </div>
             </div>
-            <button class="add-field" data="ingredient"><svg></svg></button>
+            <button class="add-field" data="ingredient"><!-- <svg></svg> --></button>
             <datalist id="recent-ingredients">
                 <% ingredientOptions.forEach(i => { %>
                     <option><%= i %></option>
@@ -69,16 +76,16 @@
             </div>
             <div class="list-wrapper">
                 <div class="photo">
-                    <input class="title" name="photo1$title" type="text" placeholder="e.g. Jambalaya top down">
-                    <input class="url" name="photo1$url" type="text" placeholder="e.g. https://www.photostore.com/photos/image.png">
+                    <input class="title" name="photo1" type="text" placeholder="e.g. Jambalaya top down">
+                    <input class="url" name="photo1" type="text" placeholder="e.g. https://www.photostore.com/photos/image.png">
                 </div>
                 <div class="photo disabled">
-                    <input class="title" name="photo2$title" type="text" placeholder="e.g. Jambalaya top down">
-                    <input class="url" name="photo2$title" type="text" placeholder="e.g. https://www.photostore.com/photos/image.png">
-                    <button class="remove-field" data="photo"><svg></svg></button>
+                    <input class="title" name="photo2" type="text" placeholder="e.g. Jambalaya top down">
+                    <input class="url" name="photo2" type="text" placeholder="e.g. https://www.photostore.com/photos/image.png">
+                    <button class="remove-field" data="photo"><!-- <svg></svg> --></button>
                 </div>
             </div>
-            <button class="add-field" data="photo"><svg></svg></button>
+            <button class="add-field" data="photo"><!-- <svg></svg> --></button>
         </section>
 
         <section id="instructions">
@@ -88,21 +95,25 @@
             <div class="list-wrapper">
                 <div class="step">
                     <label for="step1Title">Step 1</label>
-                    <input id="step1Title" name="step1$title" type="text" placeholder="e.g. Stir The Dry Ingredients" required>
+                    <input id="step1Title" name="step1" type="text" placeholder="e.g. Stir The Dry Ingredients" required>
                     <label for="step1Description">Description</label>
-                    <textarea id="step1Description" name="step1$description" placeholder="e.g. In a large bowl, mix together the salt, pepper, flower, and breadcrumbs">
+                    <textarea id="step1Description" name="step1" placeholder="e.g. In a large bowl, mix together the salt, pepper, flower, and breadcrumbs">
                     </textarea>
+                    <label for="step1imgUrl">Photo</label>
+                    <input id="step1imgUrl" name="step1" type="text" required>
                 </div>
                 <div class="step disabled">
                     <label for="step2Title">Step 2</label>
-                    <input id="step2Title" name="step2$title" type="text" placeholder="e.g. Stir The Dry Ingredients">
+                    <input id="step2Title" name="step2" type="text" placeholder="e.g. Stir The Dry Ingredients">
                     <label for="step2Description">Description</label>
-                    <textarea id="step2Description" name="step2$description" placeholder="e.g. In a large bowl, mix together the salt, pepper, flower, and breadcrumbs">
+                    <textarea id="step2Description" name="step2" placeholder="e.g. In a large bowl, mix together the salt, pepper, flower, and breadcrumbs">
                     </textarea>
-                    <button class="remove-field" data="instruction"><svg></svg></button>
+                    <label for="step2imgUrl">Photo</label>
+                    <input id="step2imgUrl" name="step2" type="text" required>
+                    <button class="remove-field" data="instruction"><!-- <svg></svg> --></button>
                 </div>
             </div>
-            <button class="add-field" data="instruction"><svg></svg></button>
+            <button class="add-field" data="instruction"><!-- <svg></svg> --></button>
         </section>
         
         <section id="notes">
@@ -123,6 +134,11 @@
             <textarea id="article" name="article">
             </textarea>
         </section>
+
+        <br><br>
+        <div class="btn-block">
+            <button type="submit" class="action-btn">Save</button>
+        </div>
     </form>
 </body>
 </html>

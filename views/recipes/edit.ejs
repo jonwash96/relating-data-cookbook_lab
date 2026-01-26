@@ -55,7 +55,7 @@
                     </div>
                 <% }) %>
             </div>
-            <button class="add-field" data="ingredient"><svg></svg></button>
+            <button class="add-field" data="ingredient"><!-- <svg></svg> --></button>
             <datalist id="recent-ingredients">
                 <% ingredientOptions.forEach(i => { %>
                     <option><%= i %></option>
@@ -76,7 +76,7 @@
                     </div>
                 <% }) %>
             </div>
-            <button class="add-field" data="photo"><svg></svg></button>
+            <button class="add-field" data="photo"><!-- <svg></svg> --></button>
         </section>
 
         <section id="instructions">
@@ -92,10 +92,12 @@
                         <textarea id="step<%=idx%>$description" name="step<%=idx%>$description">
                             <%= s.description %>
                         </textarea>
+                        <label for="step<%=idx%>$imgUrl">Step 1</label>
+                        <img id="step<%=idx%>$imgUrl" name="step<%=idx%>$imgUrl" type="text" value="<%= s.title %>" required>
                     </div>
                 <% }) %>
             </div>
-            <button class="add-field" data="step"><svg></svg></button>
+            <button class="add-field" data="step"><!-- <svg></svg> --></button>
         </section>
         
         <section id="notes">

@@ -1,36 +1,46 @@
 <% let useMessage; try {useMessage = message} catch {useMessage = false} %>
 <div id="headbar">
-    <a href="/">Respie</a>
+    <div class="left">
+        <a href="/">Respie</a>
+    </div>
 
-    <form action="/search" method="POST" class="searchbar">
-        <svg></svg>
-        <input type="text" placeholder="Search">
-        <button type="submit"><svg></svg></button>
-    </form>
-    <% if (user) { %>
-        <div id="create-menu">
-            <button class="create-btn"><svg></svg></button>
-            <ul>
-                <a href="/recipes/new"><li>Resipie</li></a>
-                <a href="/users/pantry/new"><li>Add to Pantry</li></a>
-                <a href="/ingredients/new"><li>Ingredient</li></a>
-            </ul>
-        </div>
+    <div class="center">
+        <form action="/search" method="POST" class="searchbar">
+            <!-- <svg></svg> --><span style="display:flex;justify-content:center;align-items:center;font-size: 1.5em;">🔍</span>
+            <input type="text" placeholder="Search">
+            <button type="submit">Search</button>
+        </form>
+    </div>
 
-        <div id="profile-menu">
-            <img src="<%= user.profilePhoto.small %>">
-            <span><%= user.displayname %></span>
-            <ul>
-                <a href="/users/<% user._id %>"></a><li>Profile</li>
-                <a href="/users/sign-out"></a><li>Sign Out</li>
-            </ul>
-        </div>
-    <% } else { %>
-        <div id="headbar-auth">
-            <a href="/auth/sign-up">Sign Up</a>
-            <a href="/auth/login">Login</a>
-        </div>
-    <% } %>
+    <div class="right">
+        <% if (user) { %>
+            <a href="/user/<%= user._id %>/dashboard">Dashboard</a>
+            <div id="create-menu" class="flyout-menu">
+                <button class="type3">➕</button>
+                <ul>
+                    <h6>Create</h6>
+                    <a href="/recipes/new"><li>Recipe</li></a>
+                    <a href="/ingredients/new"><li>Ingredient</li></a>
+                    <a href="/users/pantry/new"><li>Add to Pantry</li></a>
+                </ul>
+            </div>
+    
+            <div id="profile-menu" class="flyout-menu">
+                <span><%= user.displayname %></span>
+                <img src="<%= user.profilePhoto?.small || "/svg/noimg.svg" %>">
+                <span> ▾</span>
+                <ul>
+                    <a href="/user/<%= user._id %>/dashboard"><li>Profile</li></a>
+                    <a href="/auth/logout?_method=POST"><li>Sign Out</li></a>
+                </ul>
+            </div>
+        <% } else { %>
+            <div id="headbar-auth">
+                <a href="/auth/register">Sign Up</a>
+                <a href="/auth/login">Login</a>
+            </div>
+        <% } %>
+    </div>
 </div>
 
 <% if (useMessage) { %>
@@ -38,3 +48,4 @@
     <p><%= message %></p>
 </div>
 <% } %>
+<hr>

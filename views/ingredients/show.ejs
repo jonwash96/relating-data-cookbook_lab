@@ -1,0 +1,135 @@
+<% let usePantry; try {usePantry = pantry} catch {usePantry = false} %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head', { title:"My Ingredients", stylesheets:['dashboard'] }) %>
+</head>
+<body>
+    <%- include('../partials/headbar.ejs') %>
+    <%- include('../partials/nav.ejs', {classList:'show', page:'Ingredients'}) %>
+
+    <main class="ingredients">
+        <header>
+            <div>
+                <h1>Ingredients</h1>
+                <% if (data.location==='user/ingredients') { %>
+                    <a href="/ingredients">All Ingredients</a>
+                <% } else { %>
+                    <a href="/user/ingredients">My Ingredients</a>
+                <% } %>
+            </div>
+            <div class="btn-block">
+                <button class="action-btn">Add</button>
+            </div>
+        </header>
+
+        <section id="ingredients">
+            <div class="ingredients-grid">
+                <% if (ingredients.length > 0) { %>
+                    <% ingredients.map((i,idx) => { %>
+                        <% const inPantry = user.pantry.find(item => item._id===i._id) %>
+                        <div class="ingredient item card" name="<%= i.name %>" listNumber="<%= idx %>">
+                            <a href="/users/favorite/<%= i._id %>?_method=PUT" class="favorite"><!-- <svg></svg> --></a>
+                            <a href="/ingredients/<%= i._id %>">
+                                <div class="top">
+                                    <% if (i.img) { %>
+                                        <img src="<%= i.img %>" alt="<%= i.name %>">
+                                    <% } %>
+                                    <h4 class="name"><%= i.name %></h4>
+                                    <p class="category"><%= i.category || '' %></p>
+                                    <% if (inPantry) { %>
+                                        <p class="quantity"><%= inPantry?.quantity %> left</p>
+                                        <% const expirationDDay = inPantry?.expires - Date.now(); const weekInMs = 604800000; const xpddDays = Math.floor(expirationDDay * 60 * 60 * 24); %>
+                                        <% if (expirationDDay < weekInMs) { %>
+                                            <div class="chip small"><!-- <svg></svg> --> in <%= xpddDays %> days</div>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                            </a>
+                            <a href="/search/?ingredients=<%= i.name %>" class="bottom">
+                                <div class="action">
+                                    Browse Recipes
+                                    <!-- <svg></svg> -->
+                                </div>
+                            </a>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>No Ingredients To Show</p>
+                <% } %>
+            </div>
+        </section>
+
+        <section id="pantry">
+            <div class="title-block row">
+                <h2>Pantry</h2>
+                <a href="/user/pantry/new"><button type="button" class="type3">➕</button></a>
+            </div>
+            <div class="pantry-scroller">
+                <% if (usePantry) { %>
+                    <% pantry.map((i,idx) => { %>
+                        <a href="/user/pantry/dashboard/<%= i._id %>">
+                            <div class="small card" name="<%= i.name %>" listNumber="<%= idx %>">
+                                <% if (i.img) { %>
+                                    <img src="<%= i.img %>" alt="<%= i.name %>">
+                                <% } else { %>
+                                    <img src="/svg/noimg.svg">
+                                <% } %>
+                                <div class="text-block">
+                                    <p class="name"><%= i.name %></p>
+                                    <p class="category"><%= i.ingredientID?.category %></p>
+                                    <% if (i.quantity) { %><p class="quantity"><%= i.quantity %> left</p><% } %>
+                                    <% const expirationDDay = i.expires - Date.now(); const weekInMs = 604800000; const xpddDays = Math.floor(expirationDDay / 1000 / 60 / 60 / 24); %>
+                                    <% if (expirationDDay < weekInMs) { %>
+                                        <div class="chip small"><!-- <svg></svg> --> in <%= xpddDays %> days</div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </a>
+                    <% }) %>
+                <% } else { %>
+                    <p>No Pantry Data to Display</p>
+                <% } %>
+            </div>
+        </section>
+    </main>
+
+    <% if (data?.modal) { let modalConfig; %>
+        <% if (data?.modal==='show') { %>
+            <%- include('./_show-one.ejs') %>
+            <script type="text/javascript">
+                modalConfig = {
+                    showOnPageLoad:true,
+                    targetId:'ingredient-modal',
+                    function2() {this.deleteIngredient()}
+                };
+                
+            </script>
+            <% } %>
+        <% if (data?.modal==='new') { %>
+            <% if (data.location.includes('user')) { %>
+                <%- include('../users/_new-pantry-item.ejs') %>
+            <% } else { %>
+                <%- include('./_new.ejs') %>
+            <% } %>
+            <script type="text/javascript">
+                modalConfig = {
+                    showOnPageLoad:true,
+                    targetId:'ingredient-edit-modal'
+                };
+            </script>
+            <% } %>
+        <% if (data?.modal==='edit') { %>
+            <%- include('./_edit.ejs') %>
+            <script type="text/javascript">
+                modalConfig = {
+                    showOnPageLoad:true,
+                    targetId:'ingredient-edit-modal',
+                    function2() {this.deleteIngredient()}
+                };
+            </script>
+            <% } %>
+            <script type="text/javascript" src="/js/modalController.js"></script>
+    <% } %>
+</body>
+</html>

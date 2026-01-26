@@ -6,6 +6,7 @@ const foodSchema = new mongoose.Schema({
 		type:String,
 		required:true
 	},
+	quantity:String,
 	expires:Number,
 	notes:String,
 	ingredientID:{
@@ -26,24 +27,37 @@ const userSchema = new mongoose.Schema({
 	},
 	username: {
 		type: String,
-		required: true
+		required: true,
+		selected:false
 	},
 	password: {
 		type: String,
 		required: true,
-		select:false
+		selected:false
 	},
 	pantry: {
 		type: [foodSchema],
 		required: true
 	},
 	recipes:{
-		byUser:[mongoose.Schema.Types.ObjectId],
-		saved:[mongoose.Schema.Types.ObjectId]
+		byUser:{
+			type:[mongoose.Schema.Types.ObjectId],
+			ref:'Recipe'
+		},
+		saved:{
+			type:[mongoose.Schema.Types.ObjectId],
+			ref:'Recipe'
+		}
 	},
 	favorites:{
-		recipes:[mongoose.Schema.Types.ObjectId],
-		ingredients:[mongoose.Schema.Types.ObjectId]
+		recipes:{
+			type:[mongoose.Schema.Types.ObjectId],
+			ref:'Recipe'
+		},
+		ingredients:{
+			type:[mongoose.Schema.Types.ObjectId],
+			ref:'Ingredient'
+		}
 	}
 });
 
@@ -56,7 +70,7 @@ foodSchema.pre('save', async function() {
     this.resourceType = 'Food';
 	if (!this.ingredient) {
 		const ingredient = await Ingredient.find({name:this.name});
-		if (ingredient) this.ingredient = ingredient._id;
+		if (ingredient) this.ingredientID = ingredient._id;
 	}
 });
 
